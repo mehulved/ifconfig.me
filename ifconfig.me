@@ -4,9 +4,16 @@ CURL=`which curl`
 URL='ifconfig.me'
 ARG=''
 
+if [$CURL == ""]
+then
+	echo "Curl is not installed. Please install curl and try again."
+	exit 1
+fi
+
 if [ $# -gt 2 ]
 then
 	echo "Only one argument can be passed at a time."
+	exit 2
 fi
 
 CMD="$CURL $URL"
