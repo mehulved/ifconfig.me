@@ -1,0 +1,36 @@
+#!/bin/bash
+
+CURL=`which curl`
+URL='ifconfig.me'
+ARG=''
+
+if [ $# -gt 2 ]
+then
+	echo "Only one argument can be passed at a time."
+fi
+
+CMD="$CURL $URL"
+while getopts 'acefihijklmopsuvx' OPTION
+do
+	case $OPTION in
+	a) CMD="$CURL $URL/all";;
+	c) CMD="$CURL $URL/charset";;
+	e) CMD="$CURL $URL/encoding";;
+	f) CMD="$CURL $URL/forwarded";;
+	h) CMD="printf help\n";;
+	i) CMD="$CURL $URL/ip";;
+	j) CMD="$CURL $URL/all/json";;
+	k) CMD="$CURL $URL/keepalive";;
+	l) CMD="$CURL $URL/lang";;
+	m) CMD="$CURL $URL/mime";;
+	o) CMD="$CURL $URL/connection";;
+	p) CMD="$CURL $URL/port";;
+	s) CMD="$CURL $URL/host";;
+	u) CMD="$CURL $URL/ua";;
+	v) CMD="$CURL $URL/via";;
+	x) CMD="$CURL $URL/all/xml/";;
+	esac
+done
+
+$CMD
+
