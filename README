@@ -1,21 +1,19 @@
-Following options are available in the script
-a - curl ifconfig.me/all
-c - curl ifconfig.me/charset
-e - curl ifconfig.me/encoding
-f - curl ifconfig.me/forwarded
-h - help
-i - curl ifconfig.me/ip
-j - curl ifconfig.me/all/json
-k - curl ifconfig.me/keepalive
-l - curl ifconfig.me/lang
-m - curl ifconfig.me/mime
-o - curl ifconfig.me/connection
-p - curl ifconfig.me/port
-s - curl ifconfig.me/host
-u - curl ifconfig.me/ua
-v - curl ifconfig.me/via
-x - curl ifconfig.me/all/xml/
-
-TODO
-* Print proper help usage
-* Users should only be able to give one switch at a time
+Usage: ifconfig.me [options...] 
+Options:
+ -a --all           All
+ -c --charset       Charset
+ -e --encoding      Encoding
+ -f --forwarded     Forwarded
+ -h --help          Print this help and exit
+ -H --host          Host
+ -i --ip            IP
+ -j --json          All JSON format
+ -k --keepalive     Keep alive
+ -l --lang          Lang
+ -m --mime          Mime
+ -o --connection    Connection
+ -p --port          Port
+ -q --quiet         Quiet, do not print progress/status messages
+ -u --ua            UA
+ -v --via           Via
+ -x --xml           All XML format

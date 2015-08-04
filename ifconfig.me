@@ -3,41 +3,181 @@
 CURL=`which curl`
 URL='ifconfig.me'
 ARG=''
+QUIET=false
 
-if [$CURL == ""]
-then
+if [ "$CURL" == "" ]; then
 	echo "Curl is not installed. Please install curl and try again."
 	exit 1
 fi
 
-if [ $# -gt 2 ]
-then
+if [ $# -gt 2 ]; then
 	echo "Only one argument can be passed at a time."
 	exit 2
 fi
 
-CMD="$CURL $URL"
-while getopts 'acefihijklmopsuvx' OPTION
-do
-	case $OPTION in
-	a) CMD="$CURL $URL/all";;
-	c) CMD="$CURL $URL/charset";;
-	e) CMD="$CURL $URL/encoding";;
-	f) CMD="$CURL $URL/forwarded";;
-	h) CMD="printf help\n";;
-	i) CMD="$CURL $URL/ip";;
-	j) CMD="$CURL $URL/all/json";;
-	k) CMD="$CURL $URL/keepalive";;
-	l) CMD="$CURL $URL/lang";;
-	m) CMD="$CURL $URL/mime";;
-	o) CMD="$CURL $URL/connection";;
-	p) CMD="$CURL $URL/port";;
-	s) CMD="$CURL $URL/host";;
-	u) CMD="$CURL $URL/ua";;
-	v) CMD="$CURL $URL/via";;
-	x) CMD="$CURL $URL/all/xml/";;
-	esac
+if [[ "$1" == *"q"* ]] || [[ "$1" == *"quiet"* ]]; then
+  QUIET=true
+fi
+
+function qprint {
+    if [ "$QUIET" == false ]; then
+        echo "$1"
+    fi
+}
+
+function help {
+    cat << EOF
+Usage: `basename $0` [options...] 
+Options:
+ -a --all           All
+ -c --charset       Charset
+ -e --encoding      Encoding
+ -f --forwarded     Forwarded
+ -h --help          Print this help and exit
+ -H --host          Host
+ -i --ip            IP
+ -j --json          All JSON format
+ -k --keepalive     Keep alive
+ -l --lang          Lang
+ -m --mime          Mime
+ -o --connection    Connection
+ -p --port          Port
+ -q --quiet         Quiet, do not print progress/status messages
+ -u --ua            UA
+ -v --via           Via
+ -x --xml           All XML format
+EOF
+exit 0
+}
+
+function request {
+    if [ "$1" != '' ]; then
+        qprint "Requesting $URL/$1 ..."
+        $CURL "$URL/$1"
+        exit
+    else
+        help
+    fi
+}
+
+OPTS=`getopt \
+-o h,\
+q,\
+H,\
+a,\
+c,\
+C,\
+e,\
+f,\
+i,\
+j,\
+k,\
+l,\
+m,\
+o,\
+p,\
+s,\
+u,\
+v,\
+x \
+--long help,\
+all,\
+charset,\
+encoding,\
+forwarded,\
+ip,\
+json,\
+keepalive,\
+lang,\
+mime,\
+connection,\
+port,\
+host,\
+ua,\
+via,\
+xml,\
+quiet \
+-- "$@"`
+
+if [ $? != 0 ]; then
+    echo "" >&2 ;
+    exit 1
+fi
+
+eval set -- "$OPTS"
+
+while true; do
+  case "$1" in
+    -h | --help )
+        help
+        shift
+        ;;
+    -a | --all )
+        request all
+        shift
+        ;;
+    -c | --charset ) 
+        request charset
+        shift
+        ;;
+    -e | --encoding ) 
+        request encoding
+        shift
+        ;;
+    -f | --forwarded ) 
+        request forwarded
+        shift
+        ;;
+    -i | --ip ) 
+        request ip
+        shift
+        ;;
+    -j | --json ) 
+        request all/json
+        shift
+        ;;
+    -k | --keepalive ) 
+        request keepalive
+        shift
+        ;;
+    -l | --lang ) 
+        request lang
+        shift
+        ;;
+    -m | --mime ) 
+        request mime
+        shift
+        ;;
+    -C | --connection ) 
+        request connection
+        shift
+        ;;
+    -p | --port ) 
+        request port
+        shift
+        ;;
+    -H | --host ) 
+        request host
+        shift
+        ;;
+    -u | --ua ) 
+        request ua
+        shift
+        ;;
+    -v | --via ) 
+        request via
+        shift
+        ;;
+    -x| --xml ) 
+        request all/xml
+        shift
+        ;;
+    -- )
+        shift;
+        break
+        ;;
+    * )
+        break
+        ;;
+  esac
 done
-
-$CMD
-
